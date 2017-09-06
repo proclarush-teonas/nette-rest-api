@@ -32,7 +32,7 @@ put this code into your composer.json file:
             ],
             "require": {
                 "php": ">=7.0.0",
-                "NetteRestApi": "dev-master"
+                "NetteRestApi": "0.1.*"
             }
         }
 
