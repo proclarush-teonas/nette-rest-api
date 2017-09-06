@@ -1,0 +1,13 @@
+#get this into app/config/routes.neon and load in bootstrap
+#or into app/config/config.neon
+
+parameters:
+	routes:
+		api/mark:
+			presenter: App\<your_module>\Presenters\<your_presenter>
+			method:
+				GET: getMark
+				POST: postMark
+
+services:
+	routes: NetteRestApi\ApiRouteProcessor(%routes%)

@@ -1,0 +1,19 @@
+{
+  "name": "NetteRestApi",
+  "description": "PHP module for Nette to create REST API",
+  "keywords": ["nette","api","php","rest"],
+  "homepage": "http://gitlab.mobilbonus.cz/php/nette-rest-api",
+  "license": "BSD",
+  "authors": [
+    {
+      "name": "Karel Peka",
+      "homepage": "http://zhouba.cz"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "classmap": ["src/"]
+  }
+}
