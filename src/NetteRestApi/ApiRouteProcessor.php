@@ -38,7 +38,9 @@ class ApiRouteProcessor {
 	 */
 	public function __construct($routes = array(), $useErrorHandler = true){
 		$this->routes = $routes;
-		$er = new ErrorHandler();
+		if($useErrorHandler) {
+			$er = new ErrorHandler();
+		}
 	}
 
 

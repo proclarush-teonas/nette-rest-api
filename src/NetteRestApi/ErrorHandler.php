@@ -12,6 +12,7 @@ namespace NetteRestApi;
 class ErrorHandler {
 
 	public function __construct(){
+		set_error_handler(array($this, 'error'));
 		register_shutdown_function(array($this, 'shutdown'));
 	}
 
@@ -34,6 +35,13 @@ class ErrorHandler {
 					echo json_encode($result);
 			}
 
+		}
+	}
+
+	public function error($severity, $message, $filename, $lineno){
+		if (error_reporting() & $severity) {
+			$newMess = $message.' in file: '.$filename.' on line: '.$lineno;
+			throw new \ErrorException($newMess, 500, $severity, $filename, $lineno);
 		}
 	}
 
