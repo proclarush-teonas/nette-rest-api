@@ -3,11 +3,32 @@
 
 parameters:
 	routes:
-		api/mark:
-			presenter: App\<your_module>\Presenters\<your_presenter>
+		api/info:
+			presenter: App\ApiModule\Presenters\ApiPresenter
+			method:
+				GET: getDefault
+		api/user/authorize:
+			presenter: App\ApiModule\Presenters\ApiPresenter
+			method:
+				POST: authorize
+		api/message/add:
+			presenter: App\ApiModule\Presenters\ApiPresenter
+			method:
+				POST: add
+		api/message/get-all:
+			presenter: App\ApiModule\Presenters\ApiPresenter
+			method:
+				GET: getAll
+		api/message/get-new:
+			presenter: App\ApiModule\Presenters\ApiPresenter
+			method:
+				GET: getNew
+		api/message/mark:
+			presenter: App\ApiModule\Presenters\ApiPresenter
 			method:
 				GET: getMark
 				POST: postMark
+				PUT: putMark
 
 services:
 	routes: NetteRestApi\ApiRouteProcessor(%routes%)
