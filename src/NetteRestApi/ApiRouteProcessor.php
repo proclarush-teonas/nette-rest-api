@@ -34,9 +34,11 @@ class ApiRouteProcessor {
 	/**
 	 * expects routes from neon config
 	 * @param array $routes
+	 * @param bool $useErrorHandler
 	 */
-	public function __construct($routes = array()){
+	public function __construct($routes = array(), $useErrorHandler = true){
 		$this->routes = $routes;
+		$er = new ErrorHandler();
 	}
 
 
@@ -67,10 +69,15 @@ class ApiRouteProcessor {
 						$paramsToCallInOrder = array();
 
 						foreach ($params as $key => $rp) {
-							if (!isset($_REQUEST[$rp->getName()]) && !$rp->isOptional()) {
-								throw new ApiValidateException('missing parameter ' . $rp->getName(), ApiValidateException::ERR_CODE_MISSING_PARAM);
+							if (!isset($_REQUEST[$rp->getName()])) {
+								if($rp->isOptional()) {
+									$paramValue = $rp->getDefaultValue();
+								} else {
+									throw new ApiValidateException('missing parameter ' . $rp->getName(), ApiValidateException::ERR_CODE_MISSING_PARAM);
+								}
+							} else {
+								$paramValue = $_REQUEST[$rp->getName()];
 							}
-							$paramValue = $_REQUEST[$rp->getName()];
 
 							$keys = array_keys($names, '$'.$rp->getName());
 
@@ -90,7 +97,7 @@ class ApiRouteProcessor {
 									$validated = $this->validateTypeVar($paramValue, $type);
 								}
 								if (!$validated) {
-									$msg = 'variable ' . $rp->getName() . ' (' . $type . ') is not a ' . $type . '. value: ' . $_REQUEST[$rp->getName()];
+									$msg = 'variable ' . $rp->getName() . ' (' . $type . ') is not a ' . $type . '. value: ' . $paramValue;
 									throw new ApiValidateException($msg, ApiValidateException::ERR_CODE_WRONG_TYPE);
 								}
 							}

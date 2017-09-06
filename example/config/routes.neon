@@ -31,4 +31,4 @@ parameters:
 				PUT: putMark
 
 services:
-	routes: NetteRestApi\ApiRouteProcessor(%routes%)
+	routes: NetteRestApi\ApiRouteProcessor(%routes%, true)
