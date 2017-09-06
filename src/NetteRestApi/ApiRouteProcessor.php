@@ -67,7 +67,7 @@ class ApiRouteProcessor {
 						$paramsToCallInOrder = array();
 
 						foreach ($params as $key => $rp) {
-							if (!isset($_REQUEST[$rp->getName()])) {
+							if (!isset($_REQUEST[$rp->getName()]) && !$rp->isOptional()) {
 								throw new ApiValidateException('missing parameter ' . $rp->getName(), ApiValidateException::ERR_CODE_MISSING_PARAM);
 							}
 							$paramValue = $_REQUEST[$rp->getName()];
