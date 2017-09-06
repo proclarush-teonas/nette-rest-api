@@ -2,7 +2,7 @@
   "name": "NetteRestApi",
   "description": "PHP module for Nette to create REST API",
   "keywords": ["nette","api","php","rest"],
-  "homepage": "http://gitlab.mobilbonus.cz/php/nette-rest-api",
+  "homepage": "https://github.com/proclarush-teonas/nette-rest-api",
   "license": "BSD",
   "authors": [
     {

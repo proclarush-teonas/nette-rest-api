@@ -27,7 +27,7 @@ put this code into your composer.json file:
         "repositories": [
                 {
                     "type": "vcs",
-                    "url": "git@gitlab.mobilbonus.cz:php/nette-rest-api.git"
+                    "url": "https://github.com/proclarush-teonas/nette-rest-api.git"
                 }
             ],
             "require": {
