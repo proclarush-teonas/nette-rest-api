@@ -90,7 +90,7 @@ class ApiRouteProcessor {
 									$validated = $this->validateTypeVar($paramValue, $type);
 								}
 								if (!$validated) {
-									$msg = 'variable ' . $rp->getName() . ' (' . $type . ') is not a ' . $type . '. value: ' . $paramValue;
+									$msg = 'variable ' . $rp->getName() . ' (' . $type . ') is not a ' . $type . '. value: ' . $_REQUEST[$rp->getName()];
 									throw new ApiValidateException($msg, ApiValidateException::ERR_CODE_WRONG_TYPE);
 								}
 							}
