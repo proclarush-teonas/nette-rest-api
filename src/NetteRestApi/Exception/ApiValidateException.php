@@ -5,7 +5,7 @@
  * Date: 5.9.2017
  * Time: 10:47
  */
-namespace NetteRestApi;
+namespace NetteRestApi\Exception;
 
 class ApiValidateException extends \Exception {
 

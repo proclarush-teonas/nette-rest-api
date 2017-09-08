@@ -34,14 +34,9 @@ class ApiRouteProcessor {
 	/**
 	 * expects routes from neon config
 	 * @param array $routes
-	 * @param bool $useErrorHandler
 	 */
-	public function __construct($routes = array(), $useErrorHandler = true){
+	public function __construct($routes = array()){
 		$this->routes = $routes;
-		if($useErrorHandler) {
-			ob_start();
-			$er = new ErrorHandler();
-		}
 	}
 
 

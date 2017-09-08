@@ -10,6 +10,7 @@ namespace NetteRestApi;
 
 
 use Nette\Application\UI\Presenter;
+use NetteRestApi\Exception\ApiErrorException;
 
 class BaseApiPresenter extends Presenter {
 
@@ -22,7 +23,14 @@ class BaseApiPresenter extends Presenter {
 	public function startup(){
 		//your router has to direct request into api part of your application,
 		//where presenters extends some baseApiPresenter with this method,
-		$this->routeService->process($this->getHttpRequest(), $this->getContext(), $this->getHttpResponse());
+		try {
+			$this->routeService->process($this->getHttpRequest(), $this->getContext(), $this->getHttpResponse());
+		} catch (\Exception $e) {
+			if($e instanceof \Nette\Application\AbortException){
+				throw $e;
+			}
+			throw new ApiErrorException($e->getMessage(), ApiErrorException::ERR_CODE_INFERNAL, $e);
+		}
 
 		//if this happens, something is very wrong, should be terminated at the end of process method
 		parent::startup();
