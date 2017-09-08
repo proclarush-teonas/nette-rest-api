@@ -8,7 +8,7 @@
 
 namespace NetteRestApi;
 
-use NetteRestApi\ApiValidateException;
+use NetteRestApi\Exception\ApiValidateException;
 
 class ApiRouteProcessor {
 
