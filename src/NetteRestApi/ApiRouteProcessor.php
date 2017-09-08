@@ -199,7 +199,8 @@ class ApiRouteProcessor {
 
 			$keys = array_keys($names, '$'.$rp->getName());
 			if (count($keys) === 1) {
-				$this->validateByComment($types, $paramValue, $rp->getName());
+				$type = $types[array_shift($keys)];
+				$this->validateByComment($type, $paramValue, $rp->getName());
 			}
 			$paramsToCallInOrder[$rp->getName()] = $paramValue;
 		}
@@ -207,13 +208,12 @@ class ApiRouteProcessor {
 	}
 
 	/**
-	 * @param array $types
+	 * @param string $type
 	 * @param mixed $paramValue
 	 * @param string $paramName
 	 * @throws ApiValidateException
 	 */
-	protected function validateByComment($types, $paramValue, $paramName){
-		$type = $types[array_shift($keys)];
+	protected function validateByComment($type, $paramValue, $paramName){
 		$validated = false;
 		if (strpos($type, '|')) {
 			$allowedTypes = explode('|', $type);
