@@ -28,6 +28,12 @@ class ApiRouteProcessor {
 	/** @var  \Nette\Http\IRequest $httpRequest */
 	protected $httpRequest;
 
+	protected $automaticHeaders = array(
+		'Access-Control-Allow-Origin' => "*",
+		'Access-Control-Allow-Methods' => "GET,POST,PUT,DELETE,OPTIONS",
+		'Access-Control-Request-Headers' => "Content-Type,Origin",
+	);
+
 	/**
 	 * expects routes from neon config
 	 * @param array $routes
@@ -87,6 +93,9 @@ class ApiRouteProcessor {
 		$response = $this->httpResponse;
 		$response->setContentType($contentType, $encoding);
 		$response->setCode($code);
+		foreach($this->automaticHeaders as $header => $val) {
+			$this->getHttpResponse()->addHeader($header, $val);
+		}
 		echo json_encode($message);
 		throw new \Nette\Application\AbortException;
 	}
@@ -150,8 +159,15 @@ class ApiRouteProcessor {
 		$conf = $this->routes[$this->path];
 		$presenter = $conf['presenter'];
 		$methods = $conf['method'];
+		array_push($methods, 'OPTIONS');
+		$calledMethod = $this->httpRequest->getMethod();
 
-		if (array_key_exists($this->httpRequest->getMethod(), $methods)) {
+		if($calledMethod === "OPTIONS"){
+			$this->automaticHeaders['Access-Control-Allow-Methods'] = implode(',', $methods);
+			$this->respond(null, 204);
+		}
+
+		if (array_key_exists($calledMethod, $methods)) {
 			$functionName = $methods[$this->httpRequest->getMethod()];
 		} else {
 			throw new ApiValidateException('used method ('.$this->httpRequest->getMethod().') not allowed', ApiValidateException::ERR_CODE_WRONG_METHOD);
