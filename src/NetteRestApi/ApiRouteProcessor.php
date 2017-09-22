@@ -8,6 +8,8 @@
 
 namespace NetteRestApi;
 
+use Nette\Application\AbortException;
+use NetteRestApi\Exception\ApiErrorException;
 use NetteRestApi\Exception\ApiValidateException;
 
 class ApiRouteProcessor {
@@ -61,7 +63,12 @@ class ApiRouteProcessor {
 				throw new ApiValidateException('requested uri ('.$this->path.') does not exist', ApiValidateException::ERR_CODE_URI_NOT_FOUND);
 			}
 
-			list($presenter, $functionName) = $this->getRequestedPresenterAndMethodName();
+			$response = $this->getRequestedPresenterAndMethodName();
+			if($response === false){
+				//ok no content
+				throw new ApiErrorException(null, 200);
+			}
+			list($presenter, $functionName) = $response;
 
 			$presenterService = $container->getByType($presenter);
 
@@ -93,10 +100,15 @@ class ApiRouteProcessor {
 		$response = $this->httpResponse;
 		$response->setContentType($contentType, $encoding);
 		$response->setCode($code);
+
 		foreach($this->automaticHeaders as $header => $val) {
-			$this->getHttpResponse()->addHeader($header, $val);
+			$response->addHeader($header, $val);
 		}
-		echo json_encode($message);
+		if($message) {
+			echo json_encode($message);
+		} else {
+			echo '{}';
+		}
 		throw new \Nette\Application\AbortException;
 	}
 
@@ -153,18 +165,19 @@ class ApiRouteProcessor {
 
 	/**
 	 * @return array (presenterName, functionName)
+	 * @throws AbortException
 	 * @throws ApiValidateException
 	 */
 	protected function getRequestedPresenterAndMethodName(){
 		$conf = $this->routes[$this->path];
 		$presenter = $conf['presenter'];
 		$methods = $conf['method'];
-		array_push($methods, 'OPTIONS');
+		$methods['OPTIONS'] = reset($methods);
 		$calledMethod = $this->httpRequest->getMethod();
 
 		if($calledMethod === "OPTIONS"){
-			$this->automaticHeaders['Access-Control-Allow-Methods'] = implode(',', $methods);
-			$this->respond(null, 204);
+			$this->automaticHeaders['Access-Control-Allow-Methods'] = implode(',', array_keys($methods));
+			return false;
 		}
 
 		if (array_key_exists($calledMethod, $methods)) {
